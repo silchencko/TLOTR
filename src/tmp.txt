@@ -1,0 +1,4 @@
+Person{id=0, isWoman=true, name='Jane', age=24, friends=[
+Person{id=1, isWoman=false, name='John', age=24, friends=[null, null, null, null, null, null, null, null, null, null]},
+Person{id=2, isWoman=true, name='Jane', age=24, friends=[null, null, null, null, null, null, null, null, null, null]},
+Person{id=3, isWoman=false, name='Joe', age=24, friends=[null, null, null, null, null, null, null, null, null, null]}, null, null, null, null, null, null, null]}
