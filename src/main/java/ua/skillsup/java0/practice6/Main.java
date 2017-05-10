@@ -11,62 +11,76 @@ import java.util.*;
  */
 public class Main {
 
-    public static void main(String[] args)throws FileNotFoundException{
-        Scanner scanner = new Scanner(new File("TLOTR/TLOTR.txt"));
-//        for (int i =0; i<10; i++){
-//            System.out.println(scanner.next());
-//        }
-        int size = 0;
-        HashSet<String> scannerHashSet= new HashSet<>();
-
-        Map<String, Integer> hashMap = new HashMap<String , Integer>();
-
-        while (scanner.hasNext()) {
-            size++;
-            scannerHashSet.add(scanner.next());
-            Integer count = hashMap.get(scanner.next());
-//            Игнорирование знаков препинания и регистра
-            String key = scanner.next().replace('.', ' ')
-                    .replace(',', ' ')
-                    .replace(';', ' ')
-                    .replace(':', ' ')
-                    .replace('/', ' ')
-                    .replace('?', ' ')
-                    .replace('!', ' ')
-                    .replace('(', ' ')
-                    .replace(')', ' ')
-                    .replace('[', ' ')
-                    .replace(']', ' ')
-                    .replace('_', ' ')
-                    .replace('#', ' ')
-//                                       .replace("'ve", " have")
-                    .replace('\'', ' ')
-                    .trim();
-            hashMap.put(key.toLowerCase(), count == null ? 1 : count + 1);
-        }
-//          Сортировка слов по частоте употребления
-            List<Map.Entry<String, Integer>>  listOfMap = new ArrayList<>(hashMap.entrySet());
-
-            listOfMap.sort(new MyComporator());
-            for (int i = 0; i < listOfMap.size(); i++) {
-                System.out.println(listOfMap.get(i));
+    private static List<String> scannBook() throws FileNotFoundException {
+        List<String> wordsList = new ArrayList<>();
+        try (Scanner scanner = new Scanner(new File("TLOTR/TLOTR.txt"))) {
+            while (scanner.hasNext()) {
+                wordsList.add(scanner.next());
             }
-
-//        System.out.println(size);
-//        System.out.println(scannerHashSet.size());
-//        System.out.println(hashMap);
-
         }
-
-static class MyComporator implements Comparator<Map.Entry<String, Integer>>{
-
-    @Override
-    public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
-        return o2.getValue() - o1.getValue();
+        return wordsList;
     }
-}
 
-//    Map<String, Integer> sortedMap = sortByValue
-//    List list = new ArrayList<>(Map.entrySet)
+    private static String clean(String word) {
+        return word.replace('.', ' ')
+                .replace(',', ' ')
+                .replace(';', ' ')
+                .replace(':', ' ')
+                .replace('/', ' ')
+                .replace('?', ' ')
+                .replace('!', ' ')
+                .replace('(', ' ')
+                .replace(')', ' ')
+                .replace('[', ' ')
+                .replace(']', ' ')
+                .replace('_', ' ')
+                .replace('#', ' ')
+                .replace('\'', ' ')
+                .trim()
+                .toLowerCase();
+    }
 
+    //    First 10 words
+    private static void printTop(List<String> words) {
+        for (int i = 0; i < 10; i++) {
+            System.out.println(words.get(i));
+        }
+    }
+
+    //    Count unique words
+    private static Map<String, Integer> countUniqueWords(List<String> wordsList) {
+        Map<String, Integer> uniqueWordsMap = new HashMap<>();
+        for (String word : wordsList) {
+            String key = clean(word);
+            Integer count = uniqueWordsMap.get(key);
+            uniqueWordsMap.put(key, count == null ? 1 : count + 1);
+        }
+        return uniqueWordsMap;
+    }
+
+    // Сортировка слов по частоте употребления
+    private static void printMap(Map<String, Integer> uniqueWordsMap) {
+        List<Map.Entry<String, Integer>> listOfMap = new ArrayList<>(uniqueWordsMap.entrySet());
+        listOfMap.sort(new MyComporator());
+        for (int i = 0; i < 10; i++) {
+            System.out.println(listOfMap.get(i));
+        }
+    }
+
+    public static void main(String[] args) throws FileNotFoundException {
+        List<String> words = scannBook();
+        System.out.println(words.size());
+        printTop(words);
+        Map<String, Integer> uniqueWordsMap = countUniqueWords(words);
+        System.out.println(uniqueWordsMap.keySet().size());
+        printMap(uniqueWordsMap);
+    }
+
+    static class MyComporator implements Comparator<Map.Entry<String, Integer>> {
+
+        @Override
+        public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+            return o2.getValue() - o1.getValue();
+        }
+    }
 }
